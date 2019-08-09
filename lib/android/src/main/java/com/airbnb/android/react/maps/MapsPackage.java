@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.airbnb.android.react.maps.osmdroid.OsmMapCalloutManager;
 import com.airbnb.android.react.maps.osmdroid.OsmMapCircleManager;
+import com.airbnb.android.react.maps.osmdroid.OsmMapFileTile;
+import com.airbnb.android.react.maps.osmdroid.OsmMapFileTileManager;
 import com.airbnb.android.react.maps.osmdroid.OsmMapManager;
 import com.airbnb.android.react.maps.osmdroid.OsmMapMarkerManager;
 import com.airbnb.android.react.maps.osmdroid.OsmMapPolygonManager;
@@ -78,6 +80,7 @@ public class MapsPackage implements ReactPackage {
       OsmMapCircleManager osmMapCircleManager = new OsmMapCircleManager(reactContext);
       OsmMapManager osmMapManager = new OsmMapManager(reactContext);
       OsmMapUrlTileManager osmUrlTileManager = new OsmMapUrlTileManager();
+      OsmMapFileTileManager osmMapFileTileManager = new OsmMapFileTileManager();
 
       managers.addAll(Arrays.<ViewManager>asList(
           osmCalloutManager,
@@ -86,7 +89,8 @@ public class MapsPackage implements ReactPackage {
           osmPolygonManager,
           osmMapCircleManager,
           osmMapManager,
-          osmUrlTileManager
+          osmUrlTileManager,
+          osmMapFileTileManager
       ));
     }
 

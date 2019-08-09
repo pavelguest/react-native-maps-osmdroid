@@ -9,6 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 
 import com.airbnb.android.react.maps.osmdroid.overlays.InterceptDoubleTapOverlay;
 import com.airbnb.android.react.maps.osmdroid.overlays.InterceptScrollOverlay;
@@ -74,7 +75,6 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
                       ReactApplicationContext appContext,
                       OsmMapManager manager) {
         super(reactContext.getApplicationContext());
-
         this.manager = manager;
         this.context = reactContext;
         this.addOnFirstLayoutListener(this);
@@ -295,6 +295,10 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
             OsmMapUrlTile urlTileView = (OsmMapUrlTile) child;
             urlTileView.addToMap(this);
             features.add(index, urlTileView);
+        } else if (child instanceof OsmMapFileTile) {
+            OsmMapFileTile filetileView = (OsmMapFileTile) child;
+            filetileView.addToMap(this);
+            features.add(index, filetileView);
         } else if (child instanceof OsmMapCircle) {
             OsmMapCircle circleView = (OsmMapCircle) child;
             circleView.addToMap(this);

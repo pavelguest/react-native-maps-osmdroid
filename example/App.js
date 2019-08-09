@@ -9,6 +9,7 @@ import {
   Switch,
 } from 'react-native';
 import { PROVIDER_GOOGLE, PROVIDER_OSMDROID, PROVIDER_DEFAULT } from 'react-native-maps';
+import LocalCustomTiles from './examples/LocalCustomTiles';
 import DisplayLatLng from './examples/DisplayLatLng';
 import ViewsAsMarkers from './examples/ViewsAsMarkers';
 import EventListener from './examples/EventListener';
@@ -137,6 +138,7 @@ class App extends React.Component {
   render() {
     return this.renderExamples([
       // [<component>, <component description>, <Google compatible>, <Google add'l description>]
+      [LocalCustomTiles, 'LocalCustomTiles', true],
       [StaticMap, 'StaticMap', true],
       [DisplayLatLng, 'Tracking Position', true, '(incomplete)'],
       [ViewsAsMarkers, 'Arbitrary Views as Markers', true],
