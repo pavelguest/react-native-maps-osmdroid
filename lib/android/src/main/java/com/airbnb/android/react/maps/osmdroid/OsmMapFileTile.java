@@ -2,9 +2,8 @@ package com.airbnb.android.react.maps.osmdroid;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
+import android.util.Log;
 
-import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.modules.ArchiveFileFactory;
 import org.osmdroid.tileprovider.modules.IArchiveFile;
 import org.osmdroid.tileprovider.modules.OfflineTileProvider;
@@ -20,12 +19,14 @@ import java.util.Set;
 
 public class OsmMapFileTile extends OsmMapFeature {
 
+  private final static String TAG = "OsmMapFileTile";
+
   private float maximumZ = 100.f;
   private float minimumZ = 0;
+  private String fileDirPath = "/offline_tiles/";
 
   public OsmMapFileTile(Context context) {
     super(context);
-    Configuration.getInstance().setDebugMode(true);
   }
 
   @Override public void addToMap(MapView map) {
@@ -49,6 +50,10 @@ public class OsmMapFileTile extends OsmMapFeature {
 
   public void setMinimumZ(float minimumZ) {
     this.minimumZ = minimumZ;
+  }
+
+  public void setFileDirPath(String filePath) {
+    this.fileDirPath = filePath;
   }
 
   @NonNull
@@ -77,7 +82,7 @@ public class OsmMapFileTile extends OsmMapFeature {
   private void setupMapProvider(@NonNull MapView map) {
     //first we'll look at the default location for tiles that we support
     Context context = map.getContext();
-    File f = new File(context.getFilesDir() + "/offline_tiles/"); // todo allow parametrization
+    File f = new File(context.getFilesDir() + fileDirPath);
     if (f.exists() && f.isDirectory()) {
 
       File[] list = findAllSupportedFilesInDirectory(f);
@@ -110,17 +115,15 @@ public class OsmMapFileTile extends OsmMapFeature {
           } else {
             map.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
           }
-
-          Toast.makeText(map.getContext(), "Using " + source, Toast.LENGTH_LONG).show();
+          Log.d(TAG, "Using " + source);
           map.invalidate();
           return;
         } catch (Exception ex) {
           ex.printStackTrace();
         }
       } else {
-        Toast.makeText(map.getContext(), f.getAbsolutePath() + " dir not found!", Toast.LENGTH_LONG).show();
+        Log.d(TAG, f.getAbsolutePath() + " dir not found!");
       }
-      Toast.makeText(map.getContext(), f.getAbsolutePath() + " did not have any files I can open! Try using MOBAC", Toast.LENGTH_LONG).show();
     }
   }
 }

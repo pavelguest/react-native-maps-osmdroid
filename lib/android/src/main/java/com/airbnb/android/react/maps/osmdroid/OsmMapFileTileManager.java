@@ -30,6 +30,11 @@ public class OsmMapFileTileManager extends ViewGroupManager<OsmMapFileTile> {
     view.setMaximumZ(maximumZ);
   }
 
+  @ReactProp(name="fileDirPath")
+  public void setFilePath(OsmMapFileTile view, String fileDirPath) {
+    view.setFileDirPath(fileDirPath);
+  }
+
   // todo create offline placeholder binding\
   //         //https://github.com/osmdroid/osmdroid/issues/330
   //        //custom image placeholder for files that aren't available
