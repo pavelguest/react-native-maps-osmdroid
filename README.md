@@ -67,6 +67,8 @@ versions you should add `react` as a dependency in your `package.json`.
 
 [`<Overlay />` Component API](docs/overlay.md)
 
+[`<Geojson />` Component API](docs/geojson.md)
+
 ## General Usage
 
 ```js
