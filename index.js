@@ -11,6 +11,7 @@ export { default as Heatmap } from './lib/components/MapHeatmap.js';
 export { default as Polygon } from './lib/components/MapPolygon.js';
 export { default as Circle } from './lib/components/MapCircle.js';
 export { default as UrlTile } from './lib/components/MapUrlTile.js';
+export { default as FileTile } from './lib/components/MapFileTile.js';
 export { default as WMSTile } from './lib/components/MapWMSTile.js';
 export { default as LocalTile } from './lib/components/MapLocalTile.js';
 export { default as Callout } from './lib/components/MapCallout.js';
@@ -25,6 +26,7 @@ export { Animated, MAP_TYPES, ProviderPropType };
 
 export const PROVIDER_GOOGLE = MapView.PROVIDER_GOOGLE;
 export const PROVIDER_DEFAULT = MapView.PROVIDER_DEFAULT;
+export const PROVIDER_OSMDROID = MapView.PROVIDER_OSMDROID;
 
 export const MarkerAnimated = Marker.Animated;
 export const OverlayAnimated = Overlay.Animated;

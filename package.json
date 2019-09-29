@@ -2,7 +2,7 @@
   "name": "react-native-maps",
   "description": "React Native Mapview component for iOS + Android",
   "main": "index.js",
-  "author": "Leland Richardson <leland.m.richardson@gmail.com>",
+  "author": "fqborges <fqborges@gmail.com>",
   "version": "0.25.0",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -29,7 +29,9 @@
     "map",
     "mapview",
     "google-maps",
-    "mapkit"
+    "mapkit",
+    "osmdroid",
+    "openstreetmaps"
   ],
   "peerDependencies": {
     "prop-types": "^15.0 || ^16.0",
@@ -52,5 +54,10 @@
     "metro-react-native-babel-preset": "^0.53.1",
     "react": "16.8.3",
     "react-native": "0.59.3"
+  },
+  "rnpm": {
+    "android": {
+      "sourceDir": "./lib/android"
+    }
   }
 }
