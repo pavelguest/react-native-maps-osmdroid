@@ -1,35 +1,6 @@
-# react-native-maps-osmdroid [![npm version](https://img.shields.io/npm/v/react-native-maps.svg?style=flat)](https://www.npmjs.com/package/react-native-maps-osmdroid)
+# react-native-maps [![npm version](https://img.shields.io/npm/v/react-native-maps.svg?style=flat)](https://www.npmjs.com/package/react-native-maps)
 
-Clone of react-native-maps (React Native Map components for iOS + Android) supporting Open Street Maps based on osmdroid.
-
-## Attention: experimental!
-
-This implementation is meant to be version-to-version fully compatible with react-native-maps.
-
-For iOS and all Google providers, the code is exactly the same, as they are merged as is.
-
-For osmdroid provider, the following are implemented:
-
- - MapView: working with some limitations like no map styles.
- - Markers: most of it working, except the color for default markers and z-index.
- - Callouts: working. Needed some hacks as result of how it is implemented on osmdroid vs my lack of knowledge on react-native internals.
- - Polygons, working except for z-index and geodesic prop.
- - Polylines, working except for z-index and geodesic prop.
- - Cricle, working except for z-index and geodesic prop.
-
-### Differences to react-native-maps
-
- - You should import/require from 'react-native-maps-osmdroid'.
- - The default provider on Android is osmdroid. The osmdroid gradle dependency is already included in the library with a default version set. If needed, you can change the version using the project wide variable `osmdroidVersion`. Example: `ext { osmdroidVersion = '6.0.3' }` in your top-level `build.gradle`.
- - Google maps is an optional dependency for Android on this package, and the dependencies are not included on gradle build. To enable using google maps you should set the project wide variable and add the dependencies to your `build.gradle`:
- ```
-implementation "com.google.android.gms:play-services-base:${googlePlayServicesVersion}"
-implementation "com.google.android.gms:play-services-maps:${googlePlayServicesMapsVersion}"
-implementation "com.google.maps.android:android-maps-utils:${androidMapsUtilsVersion}"
- ```
- - More details on project wide variable can be found in the original installation instructions bellow.
-
-### From now, what follows is the original README.md
+React Native Map components for iOS + Android
 
 ## Installation
 
@@ -66,6 +37,8 @@ versions you should add `react` as a dependency in your `package.json`.
 [`<Circle />` Component API](docs/circle.md)
 
 [`<Overlay />` Component API](docs/overlay.md)
+
+[`<Heatmap />` Component API](docs/heatmap.md)
 
 [`<Geojson />` Component API](docs/geojson.md)
 
@@ -198,16 +171,21 @@ import { UrlTile } from 'react-native-maps';
   onRegionChange={this.onRegionChange}
 >
   <UrlTile
-   /**
-   * The url template of the tile server. The patterns {x} {y} {z} will be replaced at runtime
-   * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png
-   */
+    /**
+     * The url template of the tile server. The patterns {x} {y} {z} will be replaced at runtime
+     * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png
+     */
     urlTemplate={this.state.urlTemplate}
     /**
      * The maximum zoom level for this tile overlay. Corresponds to the maximumZ setting in
      * MKTileOverlay. iOS only.
      */
     maximumZ={19}
+    /**
+     * flipY allows tiles with inverted y coordinates (origin at bottom left of map)
+     * to be used. Its default value is false.
+     */
+    flipY={false}
   />
 </MapView>
 ```
@@ -302,7 +280,7 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
 Then add the AirGoogleMaps directory:
 
-https://github.com/airbnb/react-native-maps/blob/1e71a21f39e7b88554852951f773c731c94680c9/docs/installation.md#ios
+https://github.com/react-native-community/react-native-maps/blob/1e71a21f39e7b88554852951f773c731c94680c9/docs/installation.md#ios
 
 An unofficial step-by-step guide is also available at https://gist.github.com/heron2014/e60fa003e9b117ce80d56bb1d5bfe9e0
 
@@ -420,6 +398,9 @@ the `<Marker />`'s `title` and `description` props.
 
 Custom callout views can be the entire tooltip bubble, or just the content inside of the system
 default bubble.
+
+To handle press on specific subview of callout use `<CalloutSubview />` with `onPress`.
+See `Callouts.js` example.
 
 ![](http://i.giphy.com/xT77XNePGnMIIDpbnq.gif) ![](http://i.giphy.com/xT77YdU0HXryvoRqaQ.gif)
 
