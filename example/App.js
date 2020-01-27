@@ -8,7 +8,7 @@ import {
   Text,
   Switch,
 } from 'react-native';
-import { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
+import { PROVIDER_GOOGLE, PROVIDER_OSMDROID, PROVIDER_DEFAULT } from 'react-native-maps';
 import DisplayLatLng from './examples/DisplayLatLng';
 import ViewsAsMarkers from './examples/ViewsAsMarkers';
 import EventListener from './examples/EventListener';
@@ -70,7 +70,7 @@ export default class App extends React.Component<Props> {
 
     this.state = {
       Component: null,
-      useGoogleMaps: ANDROID,
+      useGoogleMaps: false,
     };
   }
 
@@ -113,13 +113,14 @@ export default class App extends React.Component<Props> {
   renderExamples(examples) {
     const { Component, useGoogleMaps } = this.state;
 
+    let provider = PROVIDER_DEFAULT;
+    if (useGoogleMaps) {
+      provider = PROVIDER_GOOGLE;
+    }
+
     return (
       <View style={styles.container}>
-        {Component && (
-          <Component
-            provider={useGoogleMaps ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
-          />
-        )}
+        {Component && <Component provider={provider} />}
         {Component && this.renderBackButton()}
         {!Component && (
           <ScrollView
@@ -127,7 +128,7 @@ export default class App extends React.Component<Props> {
             contentContainerStyle={styles.scrollview}
             showsVerticalScrollIndicator={false}
           >
-            {IOS && this.renderGoogleSwitch()}
+            {this.renderGoogleSwitch()}
             {examples.map(example => this.renderExample(example))}
           </ScrollView>
         )}

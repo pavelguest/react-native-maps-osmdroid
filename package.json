@@ -1,9 +1,9 @@
 {
-  "name": "react-native-maps",
+  "name": "react-native-maps-osmdroid",
   "description": "React Native Mapview component for iOS + Android",
   "main": "index.js",
   "author": "fqborges <fqborges@gmail.com>",
-  "version": "0.25.0",
+  "version": "0.26.1-unreleased",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "run:packager": "./node_modules/react-native/scripts/packager.sh",
