@@ -1,4 +1,4 @@
-declare module "react-native-maps" {
+declare module "react-native-maps-osmdroid" {
   import * as React from "react";
   import {
     Animated,
@@ -179,7 +179,7 @@ declare module "react-native-maps" {
     | "mutedStandard";
 
   export interface MapViewProps extends ViewProperties {
-    provider?: "google" | null;
+    provider?: "google" | "osmdroid" | null;
     customMapStyle?: MapStyleElement[];
     customMapStyleString?: string;
     showsUserLocation?: boolean;
@@ -522,4 +522,5 @@ declare module "react-native-maps" {
 
   export const PROVIDER_DEFAULT: null;
   export const PROVIDER_GOOGLE: "google";
+  export const PROVIDER_OSMDROID: "osmdroid";
 }
