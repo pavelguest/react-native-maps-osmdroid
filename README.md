@@ -15,7 +15,7 @@ For osmdroid provider, the following are implemented:
  - Callouts: working. Needed some hacks as result of how it is implemented on osmdroid vs my lack of knowledge on react-native internals.
  - Polygons, working except for z-index and geodesic prop.
  - Polylines, working except for z-index and geodesic prop.
- - Cricle, working except for z-index and geodesic prop.
+ - Circle, working except for z-index and geodesic prop.
 
 ### Differences to react-native-maps
 
