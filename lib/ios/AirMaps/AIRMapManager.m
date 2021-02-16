@@ -213,6 +213,7 @@ RCT_EXPORT_METHOD(getCamera:(nonnull NSNumber *)reactTag
             reject(@"Invalid argument", [NSString stringWithFormat:@"Invalid view returned from registry, expecting AIRMap, got: %@", view], NULL);
         } else {
             MKMapCamera *camera = [mapView camera];
+            CGFloat zoomLevel = (double)[self zoomLevel:mapView];
             resolve(@{
                       @"center": @{
                               @"latitude": @(camera.centerCoordinate.latitude),
@@ -221,6 +222,7 @@ RCT_EXPORT_METHOD(getCamera:(nonnull NSNumber *)reactTag
                       @"pitch": @(camera.pitch),
                       @"heading": @(camera.heading),
                       @"altitude": @(camera.altitude),
+                      @"zoom": @(zoomLevel),
             });
         }
     }];
