@@ -699,4 +699,18 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
         }
         mRotationGestureOverlay.setEnabled(rotateEnabled);
     }
+
+    public double[][] getMapBoundaries() {
+        OsmMapView mapView = OsmMapView.this;
+        BoundingBox bounds = mapView.getBoundingBox();
+        double north = bounds.getLatNorth();
+        double east = bounds.getLonEast();
+        double south = bounds.getLatSouth();
+        double west = bounds.getLonWest();
+
+        return new double[][] {
+            {east, north},
+            {west, south}
+        };
+    }
 }

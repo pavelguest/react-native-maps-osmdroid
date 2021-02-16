@@ -33,6 +33,10 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
+import com.airbnb.android.react.maps.osmdroid.OsmMapView;
+import org.osmdroid.api.IGeoPoint;
+import java.util.Objects;
+
 @ReactModule(name = AirMapModule.NAME)
 public class AirMapModule extends ReactContextBaseJavaModule {
 
@@ -153,29 +157,48 @@ public class AirMapModule extends ReactContextBaseJavaModule {
       @Override
       public void execute(NativeViewHierarchyManager nvhm)
       {
-        AirMapView view = (AirMapView) nvhm.resolveView(tag);
-        if (view == null) {
-          promise.reject("AirMapView not found");
-          return;
+        if (Objects.equals(nvhm.resolveView(tag).getClass().getSimpleName(), "OsmMapView")) {
+          OsmMapView view = (OsmMapView) nvhm.resolveView(tag);
+          if (view == null) {
+            promise.reject("OsmMapView not found");
+            return;
+          }
+
+          WritableMap centerJson = new WritableNativeMap();
+          IGeoPoint center = view.getMapCenter();
+          centerJson.putDouble("latitude", center.getLatitude());
+          centerJson.putDouble("longitude", center.getLongitude());
+
+          WritableMap cameraJson = new WritableNativeMap();
+          cameraJson.putMap("center", centerJson);
+          cameraJson.putDouble("zoom", view.getZoomLevelDouble());
+
+          promise.resolve(cameraJson);
+        } else {
+          AirMapView view = (AirMapView) nvhm.resolveView(tag);
+          if (view == null) {
+            promise.reject("AirMapView not found");
+            return;
+          }
+          if (view.map == null) {
+            promise.reject("AirMapView.map is not valid");
+            return;
+          }
+
+          CameraPosition position = view.map.getCameraPosition();
+
+          WritableMap centerJson = new WritableNativeMap();
+          centerJson.putDouble("latitude", position.target.latitude);
+          centerJson.putDouble("longitude", position.target.longitude);
+
+          WritableMap cameraJson = new WritableNativeMap();
+          cameraJson.putMap("center", centerJson);
+          cameraJson.putDouble("heading", (double)position.bearing);
+          cameraJson.putDouble("zoom", (double)position.zoom);
+          cameraJson.putDouble("pitch", (double)position.tilt);
+
+          promise.resolve(cameraJson);
         }
-        if (view.map == null) {
-          promise.reject("AirMapView.map is not valid");
-          return;
-        }
-
-        CameraPosition position = view.map.getCameraPosition();
-
-        WritableMap centerJson = new WritableNativeMap();
-        centerJson.putDouble("latitude", position.target.latitude);
-        centerJson.putDouble("longitude", position.target.longitude);
-
-        WritableMap cameraJson = new WritableNativeMap();
-        cameraJson.putMap("center", centerJson);
-        cameraJson.putDouble("heading", (double)position.bearing);
-        cameraJson.putDouble("zoom", (double)position.zoom);
-        cameraJson.putDouble("pitch", (double)position.tilt);
-
-        promise.resolve(cameraJson);
       }
     });
   }
@@ -266,17 +289,28 @@ public class AirMapModule extends ReactContextBaseJavaModule {
       @Override
       public void execute(NativeViewHierarchyManager nvhm)
       {
-        AirMapView view = (AirMapView) nvhm.resolveView(tag);
-        if (view == null) {
-          promise.reject("AirMapView not found");
-          return;
-        }
-        if (view.map == null) {
-          promise.reject("AirMapView.map is not valid");
-          return;
-        }
+        double[][] boundaries;
+        if (Objects.equals(nvhm.resolveView(tag).getClass().getSimpleName(), "OsmMapView")) {
+          OsmMapView view = (OsmMapView) nvhm.resolveView(tag);
+          if (view == null) {
+            promise.reject("OsmMapView not found");
+            return;
+          }
 
-        double[][] boundaries = view.getMapBoundaries();
+          boundaries = view.getMapBoundaries();
+        } else {
+          AirMapView view = (AirMapView) nvhm.resolveView(tag);
+          if (view == null) {
+            promise.reject("AirMapView not found");
+            return;
+          }
+          if (view.map == null) {
+            promise.reject("AirMapView.map is not valid");
+            return;
+          }
+
+          boundaries = view.getMapBoundaries();
+        }
 
         WritableMap coordinates = new WritableNativeMap();
         WritableMap northEastHash = new WritableNativeMap();
