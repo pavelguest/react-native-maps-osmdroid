@@ -1,5 +1,5 @@
 import MapView, { Animated, MAP_TYPES, ProviderPropType } from './MapView';
-import Marker from './MapMarker.js';
+import Marker from './MapMarker';
 import Overlay from './MapOverlay.js';
 
 export { default as Polyline } from './MapPolyline.js';
