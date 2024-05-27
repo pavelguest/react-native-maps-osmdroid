@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {
   ColorPropType,
@@ -16,6 +15,16 @@ import decorateMapComponent, {
   SUPPORTED,
   USES_DEFAULT_IMPLEMENTATION,
 } from './decorateMapComponent';
+import {
+  CalloutPressEvent,
+  LatLng,
+  MarkerDeselectEvent,
+  MarkerDragEvent,
+  MarkerDragStartEndEvent,
+  MarkerPressEvent,
+  MarkerSelectEvent,
+  Point,
+} from './SharedTypes';
 
 const viewConfig = {
   uiViewClassName: 'AIR<provider>MapMarker',
@@ -24,40 +33,31 @@ const viewConfig = {
   },
 };
 
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
-
-const propTypes = {
-  ...viewPropTypes,
-
-  // TODO(lmr): get rid of these?
-  identifier: PropTypes.string,
-  reuseIdentifier: PropTypes.string,
-
+export type MapMarkerProps = ViewPropTypes & {
   /**
    * The title of the marker. This is only used if the <Marker /> component has no children that
    * are a `<Callout />`, in which case the default callout behavior will be used, which
    * will show both the `title` and the `description`, if provided.
    */
-  title: PropTypes.string,
+  title: string;
 
   /**
    * The description of the marker. This is only used if the <Marker /> component has no children
    * that are a `<Callout />`, in which case the default callout behavior will be used,
    * which will show both the `title` and the `description`, if provided.
    */
-  description: PropTypes.string,
+  description: string;
 
   /**
    * Test ID for end to end test automation
    */
-  testID: PropTypes.string,
+  testID: string;
 
   /**
    * A custom image to be used as the marker's icon. Only local image resources are allowed to be
    * used.
    */
-  image: PropTypes.any,
+  image: any;
 
   /**
    * Marker icon to render (equivalent to `icon` property of GMSMarker Class).
@@ -65,35 +65,29 @@ const propTypes = {
    * because it doesn't trigger tracksViewChanges.
    * (tracksViewChanges is set to YES by default if iconView is not nil).
    */
-  icon: PropTypes.any,
+  icon: any;
 
   /**
    * Opacity level of view/image based markers
    */
-  opacity: PropTypes.number,
+  opacity: number;
 
   /**
    * If no custom marker view or custom image is provided, the platform default pin will be used,
    * which can be customized by this color. Ignored if a custom marker is being used.
    */
-  pinColor: ColorPropType,
+  pinColor: ColorPropType;
 
   /**
    * When true, the marker will be pre-selected. Setting this to true allows the user to
    * drag the marker without needing to tap on it once to focus on it.
    */
-  isPreselected: PropTypes.bool,
+  isPreselected: boolean;
 
   /**
    * The coordinate for the marker.
    */
-  coordinate: PropTypes.shape({
-    /**
-     * Coordinates for the anchor point of the marker.
-     */
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-  }).isRequired,
+  coordinate: LatLng;
 
   /**
    * The offset (in points) at which to display the view.
@@ -107,13 +101,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  centerOffset: PropTypes.shape({
-    /**
-     * Offset from the anchor point
-     */
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }),
+  centerOffset?: Point;
 
   /**
    * The offset (in points) at which to place the callout bubble.
@@ -128,13 +116,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  calloutOffset: PropTypes.shape({
-    /**
-     * Offset to the callout
-     */
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }),
+  calloutOffset?: Point;
 
   /**
    * Sets the anchor point for the marker.
@@ -152,13 +134,7 @@ const propTypes = {
    *
    * @platform android
    */
-  anchor: PropTypes.shape({
-    /**
-     * Offset to the callout
-     */
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }),
+  anchor?: Point;
 
   /**
    * Specifies the point in the marker image at which to anchor the callout when it is displayed.
@@ -171,13 +147,7 @@ const propTypes = {
    *
    * @platform android
    */
-  calloutAnchor: PropTypes.shape({
-    /**
-     * Offset to the callout
-     */
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }),
+  calloutAnchor?: Point;
 
   /**
    * Sets whether this marker should be flat against the map true or a billboard facing the
@@ -185,15 +155,15 @@ const propTypes = {
    *
    * @platform android
    */
-  flat: PropTypes.bool,
+  flat?: boolean;
 
-  draggable: PropTypes.bool,
+  draggable?: boolean;
 
   /**
    * Sets whether this marker should track view changes true.
    */
 
-  tracksViewChanges: PropTypes.bool,
+  tracksViewChanges: boolean;
 
   /**
    * Sets whether this marker should track view changes in info window true.
@@ -201,7 +171,7 @@ const propTypes = {
    * @platform ios
    */
 
-  tracksInfoWindowChanges: PropTypes.bool,
+  tracksInfoWindowChanges: boolean;
 
   /**
    * Stops Marker onPress events from propagating to and triggering MapView onPress events.
@@ -209,54 +179,53 @@ const propTypes = {
    * @platform ios
    */
 
-  stopPropagation: PropTypes.bool,
+  stopPropagation: boolean;
 
   /**
    * Callback that is called when the user presses on the marker
    */
-  onPress: PropTypes.func,
+  onPress?: (event: MarkerPressEvent) => void;
 
   /**
    * Callback that is called when the user selects the marker, before the callout is shown.
    *
    * @platform ios
    */
-  onSelect: PropTypes.func,
+  onSelect?: (event: MarkerSelectEvent) => void;
 
   /**
    * Callback that is called when the marker is deselected, before the callout is hidden.
    *
    * @platform ios
    */
-  onDeselect: PropTypes.func,
+  onDeselect?: (event: MarkerDeselectEvent) => void;
 
   /**
    * Callback that is called when the user taps the callout view.
    */
-  onCalloutPress: PropTypes.func,
+  onCalloutPress?: (event: CalloutPressEvent) => void;
 
   /**
    * Callback that is called when the user initiates a drag on this marker (if it is draggable)
    */
-  onDragStart: PropTypes.func,
-
+  onDragStart?: (event: MarkerDragStartEndEvent) => void;
   /**
    * Callback called continuously as the marker is dragged
    */
-  onDrag: PropTypes.func,
+  onDrag?: (event: MarkerDragEvent) => void;
 
   /**
    * Callback that is called when a drag on this marker finishes. This is usually the point you
    * will want to setState on the marker's coordinate again
    */
-  onDragEnd: PropTypes.func,
+  onDragEnd?: (event: MarkerDragStartEndEvent) => void;
 };
 
 const defaultProps = {
   stopPropagation: false,
 };
 
-class MapMarker extends React.Component {
+class MapMarker extends React.Component<MapMarkerProps> {
   constructor(props) {
     super(props);
 
@@ -353,7 +322,6 @@ class MapMarker extends React.Component {
   }
 }
 
-MapMarker.propTypes = propTypes;
 MapMarker.defaultProps = defaultProps;
 MapMarker.viewConfig = viewConfig;
 
