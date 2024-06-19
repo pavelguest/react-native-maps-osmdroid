@@ -1,59 +1,55 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { ColorPropType, ViewPropTypes, View } from 'react-native';
+import { ColorValue, ViewProps, View } from 'react-native';
 import decorateMapComponent, {
   USES_DEFAULT_IMPLEMENTATION,
   SUPPORTED,
 } from './decorateMapComponent';
 
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
+// Определяем интерфейс для координат
+interface Coordinate {
+  /**
+   * Latitude/Longitude coordinates
+   */
+  latitude: number;
+  longitude: number;
+}
 
-const propTypes = {
-  ...viewPropTypes,
-
+// Определяем интерфейс для пропсов компонента MapPolyline
+interface MapPolylineProps extends ViewProps {
   /**
    * An array of coordinates to describe the polygon
    */
-  coordinates: PropTypes.arrayOf(
-    PropTypes.shape({
-      /**
-       * Latitude/Longitude coordinates
-       */
-      latitude: PropTypes.number.isRequired,
-      longitude: PropTypes.number.isRequired,
-    })
-  ),
+  coordinates?: Coordinate[];
 
   /**
    * Callback that is called when the user presses on the polyline
    */
-  onPress: PropTypes.func,
+  onPress?: () => void;
 
   /* Boolean to allow a polyline to be tappable and use the
    * onPress function
    */
-  tappable: PropTypes.bool,
+  tappable?: boolean;
 
   /**
    * The fill color to use for the path.
    */
-  fillColor: ColorPropType,
+  fillColor?: ColorValue;
 
   /**
    * The stroke width to use for the path.
    */
-  strokeWidth: PropTypes.number,
+  strokeWidth?: number;
 
   /**
    * The stroke color to use for the path.
    */
-  strokeColor: ColorPropType,
+  strokeColor?: ColorValue;
 
   /**
    * The stroke colors to use for the path.
    */
-  strokeColors: PropTypes.arrayOf(ColorPropType),
+  strokeColors?: ColorValue[];
 
   /**
    * The order in which this tile overlay is drawn with respect to other overlays. An overlay
@@ -62,7 +58,7 @@ const propTypes = {
    *
    * @platform android
    */
-  zIndex: PropTypes.number,
+  zIndex?: number;
 
   /**
    * The line cap style to apply to the open ends of the path.
@@ -70,7 +66,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  lineCap: PropTypes.oneOf(['butt', 'round', 'square']),
+  lineCap?: 'butt' | 'round' | 'square';
 
   /**
    * The line join style to apply to corners of the path.
@@ -78,7 +74,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  lineJoin: PropTypes.oneOf(['miter', 'round', 'bevel']),
+  lineJoin?: 'miter' | 'round' | 'bevel';
 
   /**
    * The limiting value that helps avoid spikes at junctions between connected line segments.
@@ -90,7 +86,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  miterLimit: PropTypes.number,
+  miterLimit?: number;
 
   /**
    * Boolean to indicate whether to draw each segment of the line as a geodesic as opposed to
@@ -100,7 +96,7 @@ const propTypes = {
    *
    * @platform android
    */
-  geodesic: PropTypes.bool,
+  geodesic?: boolean;
 
   /**
    * The offset (in points) at which to start drawing the dash pattern.
@@ -113,7 +109,7 @@ const propTypes = {
    *
    * @platform ios
    */
-  lineDashPhase: PropTypes.number,
+  lineDashPhase?: number;
 
   /**
    * An array of numbers specifying the dash pattern to use for the path.
@@ -127,35 +123,35 @@ const propTypes = {
    *
    * @platform ios
    */
-  lineDashPattern: PropTypes.arrayOf(PropTypes.number),
-};
+  lineDashPattern?: number[];
+}
 
-const defaultProps = {
+const defaultProps: Partial<MapPolylineProps> = {
   strokeColor: '#000',
   strokeWidth: 1,
   lineJoin: 'round',
   lineCap: 'round',
 };
 
-class MapPolyline extends React.Component {
-  setNativeProps(props) {
-    this.polyline.setNativeProps(props);
+class MapPolyline extends React.Component<MapPolylineProps> {
+  private polyline: React.RefObject<any> = React.createRef();
+
+  setNativeProps(props: Partial<MapPolylineProps>) {
+    if (this.polyline.current) {
+      this.polyline.current.setNativeProps(props);
+    }
+  }
+
+  getAirComponent() {
+    // Метод должен вернуть компонент, специфичный для вашей реализации
   }
 
   render() {
     const AIRMapPolyline = this.getAirComponent();
-    return (
-      <AIRMapPolyline
-        {...this.props}
-        ref={ref => {
-          this.polyline = ref;
-        }}
-      />
-    );
+    return <AIRMapPolyline {...this.props} ref={this.polyline} />;
   }
 }
 
-MapPolyline.propTypes = propTypes;
 MapPolyline.defaultProps = defaultProps;
 
 export default decorateMapComponent(MapPolyline, {

@@ -2,11 +2,11 @@ import MapView, { Animated, MAP_TYPES, ProviderPropType } from './MapView';
 import Marker from './MapMarker';
 import Overlay from './MapOverlay.js';
 
-export { default as Polyline } from './MapPolyline.js';
+export { default as Polyline } from './MapPolyline';
 export { default as Heatmap } from './MapHeatmap.js';
 export { default as Polygon } from './MapPolygon.js';
 export { default as Circle } from './MapCircle.js';
-export { default as UrlTile } from './MapUrlTile.js';
+export { default as UrlTile } from './MapUrlTile';
 export { default as FileTile } from './MapFileTile.js';
 export { default as WMSTile } from './MapWMSTile.js';
 export { default as LocalTile } from './MapLocalTile.js';

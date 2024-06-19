@@ -1,24 +1,17 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-
-import { ViewPropTypes, View } from 'react-native';
-
+import * as React from 'react';
+import { ViewProps, View } from 'react-native';
 import decorateMapComponent, {
   USES_DEFAULT_IMPLEMENTATION,
   SUPPORTED,
 } from './decorateMapComponent';
 
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
-
-const propTypes = {
-  ...viewPropTypes,
-
+// Определяем интерфейс для пропсов компонента MapUrlTile
+interface MapUrlTileProps extends ViewProps {
   /**
    * The url template of the tile server. The patterns {x} {y} {z} will be replaced at runtime
    * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png
    */
-  urlTemplate: PropTypes.string.isRequired,
+  urlTemplate: string;
 
   /**
    * The order in which this tile overlay is drawn with respect to other overlays. An overlay
@@ -27,50 +20,47 @@ const propTypes = {
    *
    * @platform android
    */
-  zIndex: PropTypes.number,
+  zIndex?: number;
+
   /**
    * The maximum zoom level for this tile overlay.
    *
    */
-  maximumZ: PropTypes.number,
+  maximumZ?: number;
 
   /**
    * The minimum zoom level for this tile overlay.
    *
    */
-  minimumZ: PropTypes.number,
+  minimumZ?: number;
 
   /**
    * Corresponds to MKTileOverlay canReplaceMapContent.
    *
    * @platform ios
    */
-  shouldReplaceMapContent: PropTypes.bool,
+  shouldReplaceMapContent?: boolean;
 
   /**
    * (Optional) Tile size for iOS only, default size is 256 * 256.
    *
    * @platform ios
    */
-  tileSize: PropTypes.number,
+  tileSize?: number;
 
   /**
-   *
    * Allow tiles using the TMS coordinate system (origin bottom left)
    * to be used, and displayed at their correct coordinates
-   *
    */
-  flipY: PropTypes.bool,
-};
+  flipY?: boolean;
+}
 
-class MapUrlTile extends React.Component {
+class MapUrlTile extends React.Component<MapUrlTileProps> {
   render() {
     const AIRMapUrlTile = this.getAirComponent();
     return <AIRMapUrlTile {...this.props} />;
   }
 }
-
-MapUrlTile.propTypes = propTypes;
 
 export default decorateMapComponent(MapUrlTile, {
   componentType: 'UrlTile',
