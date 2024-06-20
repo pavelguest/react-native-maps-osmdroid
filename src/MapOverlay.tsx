@@ -1,11 +1,40 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { View, StyleSheet, Image, Animated } from 'react-native';
+import React, { Component, ReactNode } from 'react';
+import {
+  View,
+  StyleSheet,
+  Image,
+  Animated,
+  ViewProps,
+  ImageSourcePropType,
+} from 'react-native';
 
 import decorateMapComponent, {
   SUPPORTED,
   USES_DEFAULT_IMPLEMENTATION,
 } from './decorateMapComponent';
+
+interface MapOverlayProps extends ViewProps {
+  /**
+   * A custom image to be used as overlay.
+   */
+  image: ImageSourcePropType;
+  /**
+   * Top left and bottom right coordinates for the overlay
+   */
+  bounds: Array<Array<number>>;
+  /**
+   * Boolean to allow an overlay to be tappable and use the onPress function
+   */
+  tappable?: boolean;
+  /**
+   * Callback that is called when the user presses on the overlay
+   */
+  onPress?: () => void;
+  /**
+   * The opacity of the overlay.
+   */
+  opacity?: number;
+}
 
 const viewConfig = {
   uiViewClassName: 'AIR<provider>MapOverlay',
@@ -14,34 +43,21 @@ const viewConfig = {
   },
 };
 
-const propTypes = {
-  ...View.propTypes,
-  // A custom image to be used as overlay.
-  image: PropTypes.any.isRequired,
-  // Top left and bottom right coordinates for the overlay
-  bounds: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
-  /* Boolean to allow an overlay to be tappable and use the
-   * onPress function
+class MapOverlay extends Component<MapOverlayProps> {
+  /**
+   * Render method for MapOverlay component.
    */
-  tappable: PropTypes.bool,
-  // Callback that is called when the user presses on the overlay
-  onPress: PropTypes.func,
-  // The opacity of the overlay.
-  opacity: PropTypes.number,
-};
-
-class MapOverlay extends Component {
-  render() {
-    let image;
+  render(): ReactNode {
+    let image: string | null = null;
     if (this.props.image) {
       if (
-        typeof this.props.image.startsWith === 'function' &&
+        typeof this.props.image === 'string' &&
         this.props.image.startsWith('http')
       ) {
         image = this.props.image;
       } else {
-        image = Image.resolveAssetSource(this.props.image) || {};
-        image = image.uri;
+        const resolvedImage = Image.resolveAssetSource(this.props.image);
+        image = resolvedImage ? resolvedImage.uri : null;
       }
     }
 
@@ -57,7 +73,6 @@ class MapOverlay extends Component {
   }
 }
 
-MapOverlay.propTypes = propTypes;
 MapOverlay.viewConfig = viewConfig;
 MapOverlay.defaultProps = {
   opacity: 1.0,

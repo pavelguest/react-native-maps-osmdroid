@@ -1,18 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { StyleSheet, View, Text, ViewStyle, TextStyle } from 'react-native';
 
-import { StyleSheet, View, Text } from 'react-native';
-
-const propTypes = {
-  amount: PropTypes.number.isRequired,
-  fontSize: PropTypes.number,
-};
+interface PriceMarkerProps {
+  amount: number;
+  fontSize?: number;
+}
 
 const defaultProps = {
   fontSize: 13,
 };
 
-class PriceMarker extends React.Component {
+class PriceMarker extends React.Component<PriceMarkerProps> {
+  static defaultProps = defaultProps;
+
   render() {
     const { fontSize, amount } = this.props;
     return (
@@ -27,9 +27,6 @@ class PriceMarker extends React.Component {
     );
   }
 }
-
-PriceMarker.propTypes = propTypes;
-PriceMarker.defaultProps = defaultProps;
 
 const styles = StyleSheet.create({
   container: {

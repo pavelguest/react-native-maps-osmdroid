@@ -1,9 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { StyleSheet, Text, Animated, StyleProp, ViewStyle } from 'react-native';
 
-import { StyleSheet, Text, Animated } from 'react-native';
+interface AnimatedPriceMarkerProps {
+  amount: number;
+  selected: Animated.Value;
+  style?: StyleProp<ViewStyle>;
+}
 
-class AnimatedPriceMarker extends React.Component {
+class AnimatedPriceMarker extends React.Component<AnimatedPriceMarkerProps> {
   render() {
     const { amount, selected, style } = this.props;
 
@@ -39,12 +43,6 @@ class AnimatedPriceMarker extends React.Component {
     );
   }
 }
-
-AnimatedPriceMarker.propTypes = {
-  amount: PropTypes.number.isRequired,
-  selected: PropTypes.object.isRequired,
-  style: PropTypes.any,
-};
 
 const styles = StyleSheet.create({
   container: {

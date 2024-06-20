@@ -1,6 +1,6 @@
 import MapView, { Animated, MAP_TYPES, ProviderPropType } from './MapView';
 import Marker from './MapMarker';
-import Overlay from './MapOverlay.js';
+import Overlay from './MapOverlay';
 
 export { default as Polyline } from './MapPolyline';
 export { default as Heatmap } from './MapHeatmap';

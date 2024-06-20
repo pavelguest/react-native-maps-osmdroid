@@ -1,14 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 
-import { StyleSheet, View } from 'react-native';
+interface CustomCalloutProps {
+  children: ReactNode;
+  style?: ViewStyle;
+}
 
-const propTypes = {
-  children: PropTypes.node.isRequired,
-  style: PropTypes.object,
-};
-
-class CustomCallout extends React.Component {
+class CustomCallout extends React.Component<CustomCalloutProps> {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
@@ -21,8 +19,6 @@ class CustomCallout extends React.Component {
     );
   }
 }
-
-CustomCallout.propTypes = propTypes;
 
 const styles = StyleSheet.create({
   container: {
