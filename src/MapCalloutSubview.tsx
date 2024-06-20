@@ -1,22 +1,17 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, ViewPropTypes, View } from 'react-native';
+import { StyleSheet, ViewProps, View } from 'react-native';
 import decorateMapComponent, {
   SUPPORTED,
   NOT_SUPPORTED,
 } from './decorateMapComponent';
 
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
+interface MapCalloutSubviewProps extends ViewProps {
+  onPress?: () => void;
+}
 
-const propTypes = {
-  ...viewPropTypes,
-  onPress: PropTypes.func,
-};
+const defaultProps: Partial<MapCalloutSubviewProps> = {};
 
-const defaultProps = {};
-
-class MapCalloutSubview extends React.Component {
+class MapCalloutSubview extends React.Component<MapCalloutSubviewProps> {
   render() {
     const AIRMapCalloutSubview = this.getAirComponent();
     return (
@@ -28,7 +23,6 @@ class MapCalloutSubview extends React.Component {
   }
 }
 
-MapCalloutSubview.propTypes = propTypes;
 MapCalloutSubview.defaultProps = defaultProps;
 
 const styles = StyleSheet.create({

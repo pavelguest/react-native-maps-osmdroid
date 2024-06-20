@@ -10,8 +10,8 @@ export { default as UrlTile } from './MapUrlTile';
 export { default as FileTile } from './MapFileTile.js';
 export { default as WMSTile } from './MapWMSTile.js';
 export { default as LocalTile } from './MapLocalTile.js';
-export { default as Callout } from './MapCallout.js';
-export { default as CalloutSubview } from './MapCalloutSubview.js';
+export { default as Callout } from './MapCallout';
+export { default as CalloutSubview } from './MapCalloutSubview';
 export { default as AnimatedRegion } from './AnimatedRegion.js';
 export { default as Geojson } from './Geojson.js';
 
