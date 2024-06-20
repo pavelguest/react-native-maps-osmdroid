@@ -1,25 +1,18 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-
-import { ViewPropTypes, View } from 'react-native';
-
+import { View, ViewProps } from 'react-native';
 import decorateMapComponent, {
   USES_DEFAULT_IMPLEMENTATION,
   SUPPORTED,
 } from './decorateMapComponent';
 
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
-
-const propTypes = {
-  ...viewPropTypes,
-
+// Define interface for component props extending ViewProps
+interface MapLocalTileProps extends ViewProps {
   /**
    * The path template of the local tile source.
    * The patterns {x} {y} {z} will be replaced at runtime,
    * for example, /storage/emulated/0/tiles/{z}/{x}/{y}.png.
    */
-  pathTemplate: PropTypes.string.isRequired,
+  pathTemplate: string;
 
   /**
    * The order in which this tile overlay is drawn with respect to other overlays. An overlay
@@ -28,22 +21,20 @@ const propTypes = {
    *
    * @platform android
    */
-  zIndex: PropTypes.number,
+  zIndex?: number;
 
   /**
    * Size of tile images.
    */
-  tileSize: PropTypes.number,
-};
+  tileSize?: number;
+}
 
-class MapLocalTile extends React.Component {
+class MapLocalTile extends React.Component<MapLocalTileProps> {
   render() {
     const AIRMapLocalTile = this.getAirComponent();
     return <AIRMapLocalTile {...this.props} />;
   }
 }
-
-MapLocalTile.propTypes = propTypes;
 
 export default decorateMapComponent(MapLocalTile, {
   componentType: 'LocalTile',

@@ -3,13 +3,13 @@ import Marker from './MapMarker';
 import Overlay from './MapOverlay.js';
 
 export { default as Polyline } from './MapPolyline';
-export { default as Heatmap } from './MapHeatmap.js';
+export { default as Heatmap } from './MapHeatmap';
 export { default as Polygon } from './MapPolygon';
 export { default as Circle } from './MapCircle.js';
 export { default as UrlTile } from './MapUrlTile';
 export { default as FileTile } from './MapFileTile';
-export { default as WMSTile } from './MapWMSTile.js';
-export { default as LocalTile } from './MapLocalTile.js';
+export { default as WMSTile } from './MapWMSTile';
+export { default as LocalTile } from './MapLocalTile';
 export { default as Callout } from './MapCallout';
 export { default as CalloutSubview } from './MapCalloutSubview';
 export { default as AnimatedRegion } from './AnimatedRegion.js';
