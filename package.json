@@ -34,7 +34,6 @@
     "openstreetmaps"
   ],
   "peerDependencies": {
-    "prop-types": "^15.0 || ^16.0",
     "react": ">= 16.0 || < 17.0",
     "react-native": ">= 0.51",
     "react-native-web": "^0.11"
