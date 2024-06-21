@@ -142,10 +142,6 @@ class MapPolyline extends React.Component<MapPolylineProps> {
     }
   }
 
-  getAirComponent() {
-    // Метод должен вернуть компонент, специфичный для вашей реализации
-  }
-
   render() {
     const AIRMapPolyline = this.getAirComponent();
     return <AIRMapPolyline {...this.props} ref={this.polyline} />;

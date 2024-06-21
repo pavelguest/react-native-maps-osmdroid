@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {
   EdgeInsetsPropType,
@@ -56,491 +55,97 @@ const viewConfig = {
 /**
  * Defines the map camera.
  */
-const CameraShape = PropTypes.shape({
-  center: PropTypes.shape({
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-  }),
-  pitch: PropTypes.number.isRequired,
-  heading: PropTypes.number.isRequired,
-  altitude: PropTypes.number.isRequired,
-  zoom: PropTypes.number.isRequired,
-});
-
-// if ViewPropTypes is not defined fall back to View.propType (to support RN < 0.44)
-const viewPropTypes = ViewPropTypes || View.propTypes;
-
-const propTypes = {
-  ...viewPropTypes,
-  /**
-   * When provider is "google", we will use GoogleMaps.
-   * Any value other than "google" will default to using
-   * MapKit in iOS or GoogleMaps in android as the map provider.
-   */
-  provider: PropTypes.oneOf([
-    'google',
-    'osmdroid',
-  ]),
-
-  /**
-   * Used to style and layout the `MapView`.  See `StyleSheet.js` and
-   * `ViewStylePropTypes.js` for more info.
-   */
-  style: viewPropTypes.style,
-
-  /**
-   * A json object that describes the style of the map. This is transformed to a string
-   * and saved in mayStyleString to be sent to android and ios
-   * https://developers.google.com/maps/documentation/ios-sdk/styling#use_a_string_resource
-   * https://developers.google.com/maps/documentation/android-api/styling
-   */
-  customMapStyle: PropTypes.array,
-
-  /**
-   * A json string that describes the style of the map
-   * https://developers.google.com/maps/documentation/ios-sdk/styling#use_a_string_resource
-   * https://developers.google.com/maps/documentation/android-api/styling
-   */
-  customMapStyleString: PropTypes.string,
-
-  /**
-   * If `true` the app will ask for the user's location.
-   * Default value is `false`.
-   *
-   * **NOTE**: You need to add NSLocationWhenInUseUsageDescription key in
-   * Info.plist to enable geolocation, otherwise it is going
-   * to *fail silently*! You will also need to add an explanation for why
-   * you need the users location against `NSLocationWhenInUseUsageDescription` in Info.plist.
-   * Otherwise Apple may reject your app submission.
-   */
-  showsUserLocation: PropTypes.bool,
-
-  /**
-   * The title of the annotation for current user location. This only works if
-   * `showsUserLocation` is true.
-   * There is a default value `My Location` set by MapView.
-   *
-   * @platform ios
-   */
-  userLocationAnnotationTitle: PropTypes.string,
-
-  /**
-   * If `false` hide the button to move map to the current user's location.
-   * Default value is `true`.
-   *
-   * @platform android
-   */
-  showsMyLocationButton: PropTypes.bool,
-
-  /**
-   * If `true` the map will focus on the user's location. This only works if
-   * `showsUserLocation` is true and the user has shared their location.
-   * Default value is `false`.
-   *
-   * @platform ios
-   */
-  followsUserLocation: PropTypes.bool,
-
-  /**
-   * If `false` points of interest won't be displayed on the map.
-   * Default value is `true`.
-   *
-   */
-  showsPointsOfInterest: PropTypes.bool,
-
-  /**
-   * If `false` compass won't be displayed on the map.
-   * Default value is `true`.
-   *
-   * @platform ios
-   */
-  showsCompass: PropTypes.bool,
-
-  /**
-   * If `false` the user won't be able to pinch/zoom the map.
-   * Default value is `true`.
-   *
-   */
-  zoomEnabled: PropTypes.bool,
-
-  /**
-   * If `false` the user won't be able to double tap to zoom the map.
-   * However it will greatly decrease delay of tap gesture recognition.
-   * Default value is `true`.
-   *
-   */
-  zoomTapEnabled: PropTypes.bool,
-
-  /**
-   *If `false` the user won't be able to zoom the map
-   * Default value is `true`.
-   *
-   *@platform android
-   */
-  zoomControlEnabled: PropTypes.bool,
-
-  /**
-   * If `false` the user won't be able to pinch/rotate the map.
-   * Default value is `true`.
-   *
-   */
-  rotateEnabled: PropTypes.bool,
-
-  /**
-   * If `true` the map will be cached to an Image for performance
-   * Default value is `false`.
-   *
-   */
-  cacheEnabled: PropTypes.bool,
-
-  /**
-   * If `true` the map will be showing a loading indicator
-   * Default value is `false`.
-   *
-   */
-  loadingEnabled: PropTypes.bool,
-
-  /**
-   * Loading background color while generating map cache image or loading the map
-   * Default color is light gray.
-   *
-   */
-  loadingBackgroundColor: ColorPropType,
-
-  /**
-   * Loading indicator color while generating map cache image or loading the map
-   * Default color is gray color for iOS, theme color for Android.
-   *
-   */
-  loadingIndicatorColor: ColorPropType,
-
-  /**
-   * If `false` the user won't be able to change the map region being displayed.
-   * Default value is `true`.
-   *
-   */
-  scrollEnabled: PropTypes.bool,
-
-  /**
-   * If `false` the user won't be able to adjust the camera’s pitch angle.
-   * Default value is `true`.
-   *
-   */
-  pitchEnabled: PropTypes.bool,
-
-  /**
-   * If `false` will hide 'Navigate' and 'Open in Maps' buttons on marker press
-   * Default value is `true`.
-   *
-   * @platform android
-   */
-  toolbarEnabled: PropTypes.bool,
-
-  /**
-   * A Boolean indicating whether on marker press the map will move to the pressed marker
-   * Default value is `true`
-   *
-   * @platform android
-   */
-  moveOnMarkerPress: PropTypes.bool,
-
-  /**
-   * A Boolean indicating whether the map shows scale information.
-   * Default value is `false`
-   *
-   * @platform ios
-   */
-  showsScale: PropTypes.bool,
-
-  /**
-   * A Boolean indicating whether the map displays extruded building information.
-   * Default value is `true`.
-   */
-  showsBuildings: PropTypes.bool,
-
-  /**
-   * A Boolean value indicating whether the map displays traffic information.
-   * Default value is `false`.
-   */
-  showsTraffic: PropTypes.bool,
-
-  /**
-   * A Boolean indicating whether indoor maps should be enabled.
-   * Default value is `false`
-   *
-   * @platform android
-   */
-  showsIndoors: PropTypes.bool,
-
-  /**
-   * A Boolean indicating whether indoor level picker should be enabled.
-   * Default value is `false`
-   *
-   * @platform android
-   */
-  showsIndoorLevelPicker: PropTypes.bool,
-
-  /**
-   * The map type to be displayed.
-   *
-   * - standard: standard road map (default)
-   * - satellite: satellite view
-   * - hybrid: satellite view with roads and points of interest overlayed
-   * - terrain: topographic view
-   * - none: no base map
-   */
-  mapType: PropTypes.oneOf(Object.values(MAP_TYPES)),
-
-  /**
-   * The region to be displayed by the map.
-   *
-   * The region is defined by the center coordinates and the span of
-   * coordinates to display.
-   */
-  region: PropTypes.shape({
-    /**
-     * Coordinates for the center of the map.
-     */
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-
-    /**
-     * Difference between the minimun and the maximum latitude/longitude
-     * to be displayed.
-     */
-    latitudeDelta: PropTypes.number.isRequired,
-    longitudeDelta: PropTypes.number.isRequired,
-  }),
-
-  /**
-   * The initial region to be displayed by the map.  Use this prop instead of `region`
-   * only if you don't want to control the viewport of the map besides the initial region.
-   *
-   * Changing this prop after the component has mounted will not result in a region change.
-   *
-   * This is similar to the `initialValue` prop of a text input.
-   */
-  initialRegion: PropTypes.shape({
-    /**
-     * Coordinates for the center of the map.
-     */
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-
-    /**
-     * Difference between the minimun and the maximum latitude/longitude
-     * to be displayed.
-     */
-    latitudeDelta: PropTypes.number.isRequired,
-    longitudeDelta: PropTypes.number.isRequired,
-  }),
-
-  /**
-   * The camera view the map should use.
-   *
-   * Use the camera system, instead of the region system, if you need control over
-   * the pitch or heading.
-   */
-  camera: CameraShape,
-
-  /**
-   * The initial camera view the map should use.  Use this prop instead of `camera`
-   * only if you don't want to control the camera of the map besides the initial view.
-   *
-   * Use the camera system, instead of the region system, if you need control over
-   * the pitch or heading.
-   *
-   * Changing this prop after the component has mounted will not result in a camera change.
-   *
-   * This is similar to the `initialValue` prop of a text input.
-   */
-  initialCamera: CameraShape,
-
-  /**
-   * A Boolean indicating whether to use liteMode for android
-   * Default value is `false`
-   *
-   * @platform android
-   */
-  liteMode: PropTypes.bool,
-
-  /**
-   * (Google Maps only)
-   *
-   * Padding that is used by the Google Map View to position
-   * the camera, legal labels and buttons
-   *
-   */
-  mapPadding: EdgeInsetsPropType,
-
-  /**
-   * (Google Maps only, iOS)
-   *
-   * Whether the safe area padding is added to the Google Map View padding.
-   * This affects where markers, compass, Google logo etc. are placed on the view.
-   *
-   */
-  paddingAdjustmentBehavior: PropTypes.oneOf(['always', 'automatic', 'never']),
-
-  /**
-   * Maximum size of area that can be displayed.
-   *
-   * @platform ios
-   */
-  maxDelta: PropTypes.number,
-
-  /**
-   * Minimum size of area that can be displayed.
-   *
-   * @platform ios
-   */
-  minDelta: PropTypes.number,
-
-  /**
-   * Insets for the map's legal label, originally at bottom left of the map.
-   * See `EdgeInsetsPropType.js` for more information.
-   */
-  legalLabelInsets: EdgeInsetsPropType,
-
-  /**
-   * Callback that is called once the map is fully loaded.
-   */
-  onMapReady: PropTypes.func,
-
-  /**
-   * Callback that is called once all tiles have been loaded
-   * (or failed permanently) and labels have been rendered.
-   */
-  onMapLoaded: PropTypes.func,
-
-  /**
-   * Callback that is called once the kml is fully loaded.
-   */
-  onKmlReady: PropTypes.func,
-
-  /**
-   * Callback that is called continuously when the user is dragging the map.
-   */
-  onRegionChange: PropTypes.func,
-
-  /**
-   * Callback that is called once, when the user is done moving the map.
-   */
-  onRegionChangeComplete: PropTypes.func,
-
-  /**
-   * Callback that is called when user taps on the map.
-   */
-  onPress: PropTypes.func,
-
-  /**
-   * Callback that is called when user double taps on the map.
-   */
-  onDoublePress: PropTypes.func,
-
-  /**
-   * Callback that is called when user makes a "long press" somewhere on the map.
-   */
-  onLongPress: PropTypes.func,
-
-  /**
-   * Callback that is called when the underlying map figures our users current location.
-   */
-  onUserLocationChange: PropTypes.func,
-
-  /**
-   * Callback that is called when user makes a "drag" somewhere on the map
-   */
-  onPanDrag: PropTypes.func,
-
-  /**
-   * Callback that is called when user click on a POI
-   */
-  onPoiClick: PropTypes.func,
-
-  /**
-   * Callback that is called when a marker on the map is tapped by the user.
-   */
-  onMarkerPress: PropTypes.func,
-
-  /**
-   * Callback that is called when a marker on the map becomes selected. This will be called when
-   * the callout for that marker is about to be shown.
-   *
-   * @platform ios
-   */
-  onMarkerSelect: PropTypes.func,
-
-  /**
-   * Callback that is called when a marker on the map becomes deselected. This will be called when
-   * the callout for that marker is about to be hidden.
-   *
-   * @platform ios
-   */
-  onMarkerDeselect: PropTypes.func,
-
-  /**
-   * Callback that is called when a callout is tapped by the user.
-   */
-  onCalloutPress: PropTypes.func,
-
-  /**
-   * Callback that is called when the user initiates a drag on a marker (if it is draggable)
-   */
-  onMarkerDragStart: PropTypes.func,
-
-  /**
-   * Callback called continuously as a marker is dragged
-   */
-  onMarkerDrag: PropTypes.func,
-
-  /**
-   * Callback that is called when a drag on a marker finishes. This is usually the point you
-   * will want to setState on the marker's coordinate again
-   */
-  onMarkerDragEnd: PropTypes.func,
-
-  /**
-   * Minimum zoom value for the map, must be between 0 and 20
-   */
-  minZoomLevel: PropTypes.number,
-
-  /**
-   * Maximum zoom value for the map, must be between 0 and 20
-   */
-  maxZoomLevel: PropTypes.number,
-
-  /**
-   * Url KML Source
-   */
-  kmlSrc: PropTypes.string,
-
-  /**
-   * Offset Point x y for compass location.
-   *
-   * @platform ios
-   */
-  compassOffset: PointPropType,
-
-  /**
-   * Callback that is called when a level is activated on a indoor building.
-   */
-  onIndoorLevelActivated: PropTypes.func,
-
-  /**
-   * Callback that is called when a Building is focused.
-   */
-  onIndoorBuildingFocused: PropTypes.func,
-
-  /**
-   * Sets the tint color of the map. (Changes the color of the position indicator) Defaults to system blue.
-   *
-   * @platform ios
-   */
-  tintColor: ColorPropType,
-};
-
-class MapView extends React.Component {
+interface CameraShape {
+  center: {
+    latitude: number;
+    longitude: number;
+  };
+  pitch?: number;
+  heading?: number;
+  altitude?: number;
+  zoom?: number;
+}
+
+/**
+ * Interface for defining the region displayed by the map.
+ */
+interface IRegion {
+  latitude: number; // Coordinates for the center of the map.
+  longitude: number;
+  latitudeDelta: number; // Difference between the minimum and the maximum latitude/longitude to be displayed.
+  longitudeDelta: number;
+}
+
+/**
+ * Props for the MapView component.
+ */
+interface MapViewProps {
+  provider?: 'google' | 'osmdroid'; // Map provider: 'google' or 'osmdroid'.
+  style?: ViewStyle; // Style and layout for the MapView component.
+  customMapStyle?: Array<any>; // JSON object describing the style of the map.
+  customMapStyleString?: string; // JSON string describing the style of the map.
+  showsUserLocation?: boolean; // Show user's location on the map.
+  userLocationAnnotationTitle?: string; // Title of the annotation for the user's location (iOS only).
+  showsMyLocationButton?: boolean; // Show button to move map to the current user's location (Android only).
+  followsUserLocation?: boolean; // Focus on the user's location as it updates (iOS only).
+  showsPointsOfInterest?: boolean; // Show points of interest on the map.
+  showsCompass?: boolean; // Show compass on the map (iOS only).
+  zoomEnabled?: boolean; // Enable pinch/zoom on the map.
+  zoomTapEnabled?: boolean; // Enable double tap to zoom on the map.
+  zoomControlEnabled?: boolean; // Enable zoom controls on the map (Android only).
+  rotateEnabled?: boolean; // Enable pinch/rotate on the map.
+  cacheEnabled?: boolean; // Cache the map as an image for performance.
+  loadingEnabled?: boolean; // Show a loading indicator on the map.
+  loadingBackgroundColor?: ColorValue; // Background color for the loading indicator.
+  loadingIndicatorColor?: ColorValue; // Color for the loading indicator.
+  scrollEnabled?: boolean; // Enable scroll on the map.
+  pitchEnabled?: boolean; // Enable adjusting the camera’s pitch angle.
+  toolbarEnabled?: boolean; // Show 'Navigate' and 'Open in Maps' buttons on marker press (Android only).
+  moveOnMarkerPress?: boolean; // Move map to the pressed marker on marker press (Android only).
+  showsScale?: boolean; // Show scale information on the map (iOS only).
+  showsBuildings?: boolean; // Show extruded building information on the map.
+  showsTraffic?: boolean; // Show traffic information on the map.
+  showsIndoors?: boolean; // Enable indoor maps (Android only).
+  showsIndoorLevelPicker?: boolean; // Enable indoor level picker (Android only).
+  mapType?: keyof typeof MAP_TYPES; // Type of map to display.
+  region?: IRegion; // Region to be displayed by the map.
+  initialRegion?: IRegion; // Initial region to be displayed by the map.
+  camera?: CameraShape; // Camera view the map should use.
+  initialCamera?: CameraShape; // Initial camera view the map should use.
+  liteMode?: boolean; // Use liteMode for Android.
+  mapPadding?: EdgeInsets; // Padding for the map.
+  paddingAdjustmentBehavior?: 'always' | 'automatic' | 'never'; // Adjustment behavior for safe area padding on iOS.
+  maxDelta?: number; // Maximum size of area that can be displayed (iOS only).
+  minDelta?: number; // Minimum size of area that can be displayed (iOS only).
+  legalLabelInsets?: EdgeInsets; // Insets for the map's legal label.
+  onMapReady?: () => void; // Callback when the map is fully loaded.
+  onMapLoaded?: () => void; // Callback when all tiles have been loaded.
+  onKmlReady?: () => void; // Callback when KML is fully loaded.
+  onRegionChange?: (region: IRegion) => void; // Callback continuously when the user is dragging the map.
+  onRegionChangeComplete?: (region: IRegion) => void; // Callback when the user is done moving the map.
+  onPress?: (event: any) => void; // Callback when the user taps on the map.
+  onDoublePress?: (event: any) => void; // Callback when the user double taps on the map.
+  onLongPress?: (event: any) => void; // Callback when the user makes a "long press" on the map.
+  onUserLocationChange?: (event: any) => void; // Callback when the map determines the user's current location.
+  onPanDrag?: (event: any) => void; // Callback when the user makes a "drag" on the map.
+  onPoiClick?: (event: any) => void; // Callback when the user clicks on a POI.
+  onMarkerPress?: (event: any) => void; // Callback when a marker on the map is tapped.
+  onMarkerSelect?: (event: any) => void; // Callback when a marker on the map becomes selected (iOS only).
+  onMarkerDeselect?: (event: any) => void; // Callback when a marker on the map becomes deselected (iOS only).
+  onCalloutPress?: (event: any) => void; // Callback when a callout on the map is tapped.
+  onMarkerDragStart?: (event: any) => void; // Callback when a drag on a marker starts.
+  onMarkerDrag?: (event: any) => void; // Callback continuously as a marker is dragged.
+  onMarkerDragEnd?: (event: any) => void; // Callback when a drag on a marker ends.
+  minZoomLevel?: number; // Minimum zoom value for the map.
+  maxZoomLevel?: number; // Maximum zoom value for the map.
+  kmlSrc?: string; // URL KML source.
+  compassOffset?: { x: number; y: number }; // Offset for compass location (iOS only).
+  onIndoorLevelActivated?: (event: any) => void; // Callback when a level is activated in an indoor building.
+  onIndoorBuildingFocused?: (event: any) => void; // Callback when a building is focused indoors.
+  tintColor?: ColorValue; // Tint color of the map (iOS only).
+}
+
+class MapView  extends React.Component<MapViewProps> {
   constructor(props) {
     super(props);
 
@@ -1020,7 +625,6 @@ class MapView extends React.Component {
   }
 }
 
-MapView.propTypes = propTypes;
 MapView.viewConfig = viewConfig;
 MapView.childContextTypes = childContextTypes;
 
@@ -1076,10 +680,6 @@ if (!NativeModules.UIManager.getViewManagerConfig) {
 
 export const Animated = RNAnimated.createAnimatedComponent(MapView);
 
-export const ProviderPropType = PropTypes.oneOf(
-  Object.values(ProviderConstants)
-);
-
 /**
  * TODO:
  * All of these properties on MapView are unecessary since they can be imported
@@ -1101,7 +701,6 @@ MapView.Overlay = MapOverlay;
 MapView.Callout = MapCallout;
 MapView.CalloutSubview = MapCalloutSubview;
 Object.assign(MapView, ProviderConstants);
-MapView.ProviderPropType = ProviderPropType;
 
 MapView.Animated = Animated;
 MapView.AnimatedRegion = AnimatedRegion;

@@ -1,13 +1,17 @@
-import PropTypes from 'prop-types';
 import { requireNativeComponent, NativeModules, Platform } from 'react-native';
-import { PROVIDER_DEFAULT, PROVIDER_GOOGLE, PROVIDER_OSMDROID } from './ProviderConstants';
+import {
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+  PROVIDER_OSMDROID,
+} from './ProviderConstants';
 
 export const SUPPORTED = 'SUPPORTED';
 export const USES_DEFAULT_IMPLEMENTATION = 'USES_DEFAULT_IMPLEMENTATION';
 export const NOT_SUPPORTED = 'NOT_SUPPORTED';
 
 export function getAirMapName(provider) {
-  if (provider === PROVIDER_GOOGLE) return Platform.OS === 'ios' ? 'AIRGoogleMap' : 'AIRMap';
+  if (provider === PROVIDER_GOOGLE)
+    return Platform.OS === 'ios' ? 'AIRGoogleMap' : 'AIRMap';
   if (Platform.OS === 'android') return 'OsmMap';
   return 'AIRMap';
 }
@@ -15,10 +19,6 @@ export function getAirMapName(provider) {
 function getAirComponentName(provider, component) {
   return `${getAirMapName(provider)}${component}`;
 }
-
-export const contextTypes = {
-  provider: PropTypes.string,
-};
 
 export const createNotSupportedComponent = message => () => {
   console.error(message);
@@ -52,10 +52,8 @@ export default function decorateMapComponent(
   const getDefaultComponent = () =>
     requireNativeComponent(getAirComponentName(null, componentType), Component);
 
-  Component.contextTypes = contextTypes;
-
   Component.prototype.getAirComponent = function getAirComponent() {
-    const provider = this.context.provider || PROVIDER_DEFAULT;
+    const provider = this.context?.provider || PROVIDER_DEFAULT;
     if (components[provider]) {
       return components[provider];
     }
@@ -90,7 +88,7 @@ export default function decorateMapComponent(
 
   Component.prototype.getUIManagerCommand = function getUIManagerCommand(name) {
     const componentName = getAirComponentName(
-      this.context.provider,
+      this.context?.provider,
       componentType
     );
     return getViewManagerConfig(componentName).Commands[name];
@@ -100,7 +98,7 @@ export default function decorateMapComponent(
     name
   ) {
     const airComponentName = `${getAirComponentName(
-      this.context.provider,
+      this.context?.provider,
       componentType
     )}Manager`;
     return NativeModules[airComponentName][name];
