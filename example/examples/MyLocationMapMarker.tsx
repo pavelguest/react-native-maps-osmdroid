@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import {
   StyleSheet,
   Text,
@@ -8,7 +6,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import { Marker } from 'react-native-maps';
+import { Marker, MarkerProps } from 'react-native-maps';
 import isEqual from 'lodash/isEqual';
 
 const GEOLOCATION_OPTIONS = {
@@ -20,36 +18,49 @@ const ANCHOR = { x: 0.5, y: 0.5 };
 
 const colorOfmyLocationMapMarker = 'blue';
 
-const propTypes = {
-  ...Marker.propTypes,
-  // override this prop to make it optional
-  coordinate: PropTypes.shape({
-    latitude: PropTypes.number.isRequired,
-    longitude: PropTypes.number.isRequired,
-  }),
-  children: PropTypes.node,
-  geolocationOptions: PropTypes.shape({
-    enableHighAccuracy: PropTypes.bool,
-    timeout: PropTypes.number,
-    maximumAge: PropTypes.number,
-  }),
-  heading: PropTypes.number,
-  enableHack: PropTypes.bool,
-};
+interface MyLocationMapMarkerProps extends Partial<MarkerProps> {
+  coordinate?: {
+    latitude: number;
+    longitude: number;
+  };
+  children?: React.ReactNode;
+  geolocationOptions?: {
+    enableHighAccuracy?: boolean;
+    timeout?: number;
+    maximumAge?: number;
+  };
+  heading?: number;
+  enableHack?: boolean;
+}
 
-const defaultProps = {
-  enableHack: false,
-  geolocationOptions: GEOLOCATION_OPTIONS,
-};
+interface MyLocationMapMarkerState {
+  myPosition: {
+    latitude: number;
+    longitude: number;
+    heading?: number;
+  } | null;
+}
 
-export default class MyLocationMapMarker extends React.PureComponent {
-  constructor(props) {
+export default class MyLocationMapMarker extends React.PureComponent<
+  MyLocationMapMarkerProps,
+  MyLocationMapMarkerState
+> {
+  static defaultProps = {
+    enableHack: false,
+    geolocationOptions: GEOLOCATION_OPTIONS,
+  };
+
+  private mounted: boolean;
+  private watchID?: number;
+
+  constructor(props: MyLocationMapMarkerProps) {
     super(props);
     this.mounted = false;
     this.state = {
       myPosition: null,
     };
   }
+
   componentDidMount() {
     this.mounted = true;
     // If you supply a coordinate prop, we won't try to track location automatically
@@ -58,20 +69,20 @@ export default class MyLocationMapMarker extends React.PureComponent {
     }
 
     if (Platform.OS === 'android') {
-      PermissionsAndroid.requestPermission(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-      ).then(granted => {
-        if (granted && this.mounted) {
-          this.watchLocation();
-        }
-      });
+      PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+        .then((granted) => {
+          if (granted === PermissionsAndroid.RESULTS.GRANTED && this.mounted) {
+            this.watchLocation();
+          }
+        });
     } else {
       this.watchLocation();
     }
   }
+
   watchLocation() {
     this.watchID = navigator.geolocation.watchPosition(
-      position => {
+      (position) => {
         const myLastPosition = this.state.myPosition;
         const myPosition = position.coords;
         if (!isEqual(myPosition, myLastPosition)) {
@@ -82,12 +93,14 @@ export default class MyLocationMapMarker extends React.PureComponent {
       this.props.geolocationOptions
     );
   }
+
   componentWillUnmount() {
     this.mounted = false;
     if (this.watchID) {
       navigator.geolocation.clearWatch(this.watchID);
     }
   }
+
   render() {
     let { heading, coordinate } = this.props;
     if (!coordinate) {
@@ -193,6 +206,3 @@ const styles = StyleSheet.create({
   },
   markerText: { width: 0, height: 0 },
 });
-
-MyLocationMapMarker.propTypes = propTypes;
-MyLocationMapMarker.defaultProps = defaultProps;

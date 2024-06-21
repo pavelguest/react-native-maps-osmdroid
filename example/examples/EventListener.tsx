@@ -1,14 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
-  ProviderPropType,
   Polygon,
   Polyline,
   Callout,
+  Region,
+  MapEvent,
+  MarkerPressEvent,
+  PolygonPressEvent,
+  PolylinePressEvent,
+  UserLocationChangeEvent,
+  CalloutPressEvent,
 } from 'react-native-maps';
 import PriceMarker from './PriceMarker';
 
@@ -21,8 +25,16 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
 
-class Event extends React.Component {
-  shouldComponentUpdate(nextProps) {
+interface EventProps {
+  event: {
+    id: number,
+    name: string,
+    data: any,
+  };
+}
+
+class Event extends React.Component<EventProps> {
+  shouldComponentUpdate(nextProps: EventProps) {
     return this.props.event.id !== nextProps.event.id;
   }
 
@@ -39,12 +51,20 @@ class Event extends React.Component {
   }
 }
 
-Event.propTypes = {
-  event: PropTypes.object,
-};
+interface EventListenerState {
+  region: Region;
+  events: Array<{ id: number, name: string, data: any }>;
+}
 
-class EventListener extends React.Component {
-  constructor(props) {
+interface EventListenerProps {
+  provider?: 'google' | null;
+}
+
+class EventListener extends React.Component<
+  EventListenerProps,
+  EventListenerState
+> {
+  constructor(props: EventListenerProps) {
     super(props);
 
     this.state = {
@@ -58,7 +78,7 @@ class EventListener extends React.Component {
     };
   }
 
-  makeEvent(e, name) {
+  makeEvent(e: any, name: string) {
     return {
       id: id++,
       name,
@@ -66,8 +86,16 @@ class EventListener extends React.Component {
     };
   }
 
-  recordEvent(name) {
-    return e => {
+  recordEvent(name: string) {
+    return (
+      e:
+        | MapEvent
+        | UserLocationChangeEvent
+        | MarkerPressEvent
+        | PolygonPressEvent
+        | PolylinePressEvent
+        | CalloutPressEvent
+    ) => {
       if (e.persist) {
         e.persist(); // Avoids warnings relating to https://fb.me/react-event-pooling
       }
@@ -78,7 +106,7 @@ class EventListener extends React.Component {
   }
 
   render() {
-    // Events that are dependent on
+    // Events that are dependent on the provider
     let googleProviderProps = {};
     if (this.props.provider === PROVIDER_GOOGLE) {
       googleProviderProps = {
@@ -188,10 +216,6 @@ class EventListener extends React.Component {
     );
   }
 }
-
-EventListener.propTypes = {
-  provider: ProviderPropType,
-};
 
 const styles = StyleSheet.create({
   callout: {
