@@ -8,7 +8,7 @@ import {
   NativeModules,
   ColorPropType,
   findNodeHandle,
-  View,
+  ViewStyle,
 } from 'react-native';
 import MapMarker from './MapMarker';
 import MapPolyline from './MapPolyline';
@@ -25,7 +25,7 @@ import MapHeatMap from './MapHeatmap';
 import AnimatedRegion from './AnimatedRegion';
 import Geojson from './Geojson';
 import {
-  contextTypes as childContextTypes,
+  // contextTypes as childContextTypes,
   getAirMapName,
   googleMapIsInstalled,
   osmdroidIsInstalled,
@@ -157,6 +157,11 @@ class MapView extends React.Component<MapViewProps> {
     this._onChange = this._onChange.bind(this);
     this._onLayout = this._onLayout.bind(this);
   }
+
+  static viewConfig = viewConfig;
+  static childContextTypes = {
+    provider: () => null,
+  };
 
   setNativeProps(props) {
     this.map.setNativeProps(props);
@@ -624,8 +629,8 @@ class MapView extends React.Component<MapViewProps> {
   }
 }
 
-MapView.viewConfig = viewConfig;
-MapView.childContextTypes = childContextTypes;
+// MapView.viewConfig = viewConfig;
+// MapView.childContextTypes = childContextTypes;
 
 MapView.MAP_TYPES = MAP_TYPES;
 
