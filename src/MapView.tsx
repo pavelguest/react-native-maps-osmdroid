@@ -8,7 +8,6 @@ import {
   NativeModules,
   ColorPropType,
   findNodeHandle,
-  ViewPropTypes,
   View,
 } from 'react-native';
 import MapMarker from './MapMarker';
@@ -145,7 +144,7 @@ interface MapViewProps {
   tintColor?: ColorValue; // Tint color of the map (iOS only).
 }
 
-class MapView  extends React.Component<MapViewProps> {
+class MapView extends React.Component<MapViewProps> {
   constructor(props) {
     super(props);
 
@@ -641,15 +640,24 @@ const nativeComponent = Component =>
   });
 const airMaps = {};
 if (Platform.OS === 'android') {
-  airMaps.google = googleMapIsInstalled ? nativeComponent('AIRMap') :
-    createNotSupportedComponent('react-native-maps: google maps dependecy must be added to your app build.gradle to support google provider.'); // eslint-disable-line max-len
-  airMaps.osmdroid = osmdroidIsInstalled ? nativeComponent('OsmMap') :
-    createNotSupportedComponent('react-native-maps: osmdroid dependecy must be added to your app build.gradle to support osmdroid provider.'); // eslint-disable-line max-len
+  airMaps.google = googleMapIsInstalled
+    ? nativeComponent('AIRMap')
+    : createNotSupportedComponent(
+        'react-native-maps: google maps dependecy must be added to your app build.gradle to support google provider.'
+      ); // eslint-disable-line max-len
+  airMaps.osmdroid = osmdroidIsInstalled
+    ? nativeComponent('OsmMap')
+    : createNotSupportedComponent(
+        'react-native-maps: osmdroid dependecy must be added to your app build.gradle to support osmdroid provider.'
+      ); // eslint-disable-line max-len
   airMaps.default = airMaps.osmdroid;
 } else {
   airMaps.default = nativeComponent('AIRMap');
-  airMaps.google = googleMapIsInstalled ? nativeComponent('AIRGoogleMap') :
-    createNotSupportedComponent('react-native-maps: AirGoogleMaps dir must be added to your xCode project to support GoogleMaps on iOS.'); // eslint-disable-line max-len
+  airMaps.google = googleMapIsInstalled
+    ? nativeComponent('AIRGoogleMap')
+    : createNotSupportedComponent(
+        'react-native-maps: AirGoogleMaps dir must be added to your xCode project to support GoogleMaps on iOS.'
+      ); // eslint-disable-line max-len
 }
 const getAirMapComponent = provider => airMaps[provider || 'default'];
 

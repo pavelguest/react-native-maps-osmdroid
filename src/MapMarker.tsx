@@ -7,7 +7,6 @@ import {
   Animated,
   Image,
   findNodeHandle,
-  ViewPropTypes,
   View,
 } from 'react-native';
 
@@ -33,7 +32,7 @@ const viewConfig = {
   },
 };
 
-export type MapMarkerProps = ViewPropTypes & {
+export type MapMarkerProps = {
   /**
    * The title of the marker. This is only used if the <Marker /> component has no children that
    * are a `<Callout />`, in which case the default callout behavior will be used, which
